@@ -1,0 +1,82 @@
+{
+  "tier": "A100_40",
+  "gpu_requested": "A100",
+  "price_usd_per_hr": 2.1,
+  "mode": "cold",
+  "concurrency_levels": [
+    1,
+    4,
+    8,
+    16
+  ],
+  "timestamp_utc": "2026-07-03T05:00:28+00:00",
+  "pattern": "voice-cloning",
+  "cold_start": {
+    "cold_start_s": 7.499,
+    "audio_duration_s": 4.08,
+    "ok": true,
+    "bytes": 195884
+  },
+  "sweep": [
+    {
+      "concurrency": 1,
+      "ok": 1,
+      "failed": 0,
+      "wall_s": 2.633,
+      "throughput_req_s": 0.38,
+      "mean_latency_s": 2.633,
+      "p50_latency_s": 2.633,
+      "max_latency_s": 2.633,
+      "mean_audio_duration_s": 4.12,
+      "total_audio_s": 4.12,
+      "rtf": 0.639,
+      "audio_s_per_s": 1.564,
+      "errors": []
+    },
+    {
+      "concurrency": 4,
+      "ok": 4,
+      "failed": 0,
+      "wall_s": 2.679,
+      "throughput_req_s": 1.493,
+      "mean_latency_s": 2.632,
+      "p50_latency_s": 2.636,
+      "max_latency_s": 2.678,
+      "mean_audio_duration_s": 4.01,
+      "total_audio_s": 16.04,
+      "rtf": 0.656,
+      "audio_s_per_s": 5.987,
+      "errors": []
+    },
+    {
+      "concurrency": 8,
+      "ok": 8,
+      "failed": 0,
+      "wall_s": 2.961,
+      "throughput_req_s": 2.702,
+      "mean_latency_s": 2.875,
+      "p50_latency_s": 2.874,
+      "max_latency_s": 2.959,
+      "mean_audio_duration_s": 3.94,
+      "total_audio_s": 31.52,
+      "rtf": 0.73,
+      "audio_s_per_s": 10.646,
+      "errors": []
+    },
+    {
+      "concurrency": 16,
+      "ok": 16,
+      "failed": 0,
+      "wall_s": 4.695,
+      "throughput_req_s": 3.408,
+      "mean_latency_s": 3.655,
+      "p50_latency_s": 3.664,
+      "max_latency_s": 4.693,
+      "mean_audio_duration_s": 4.01,
+      "total_audio_s": 64.16,
+      "rtf": 0.912,
+      "audio_s_per_s": 13.665,
+      "errors": []
+    }
+  ]
+}
