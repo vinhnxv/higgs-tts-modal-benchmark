@@ -87,7 +87,7 @@ _image = (
         }
     )
     .run_commands(
-        ". /app/sglang-omni/.venv/bin/activate && uv pip install huggingface-hub==0.36.0 hf-transfer==0.1.9",
+        ". /app/sglang-omni/.venv/bin/activate && uv pip install hf-transfer==0.1.9",
     )
     .add_local_dir(os.path.join(ROOT, "reference_audio"), "/ref_audio_source")
 )

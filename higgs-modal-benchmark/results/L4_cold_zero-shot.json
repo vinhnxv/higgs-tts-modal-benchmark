@@ -1,0 +1,34 @@
+{
+  "tier": "L4",
+  "gpu_requested": "L4",
+  "price_usd_per_hr": 0.8,
+  "mode": "cold",
+  "concurrency_levels": [
+    1
+  ],
+  "timestamp_utc": "2026-07-03T04:25:30+00:00",
+  "pattern": "zero-shot",
+  "cold_start": {
+    "cold_start_s": 304.924,
+    "audio_duration_s": 2.12,
+    "ok": true,
+    "bytes": 101804
+  },
+  "sweep": [
+    {
+      "concurrency": 1,
+      "ok": 1,
+      "failed": 0,
+      "wall_s": 3.122,
+      "throughput_req_s": 0.32,
+      "mean_latency_s": 3.121,
+      "p50_latency_s": 3.121,
+      "max_latency_s": 3.121,
+      "mean_audio_duration_s": 1.92,
+      "total_audio_s": 1.92,
+      "rtf": 1.626,
+      "audio_s_per_s": 0.615,
+      "errors": []
+    }
+  ]
+}
