@@ -208,8 +208,8 @@ _cls_kwargs: dict = dict(
     # (HIGGS_TIER is set locally but not in the container by default).
     env={"HIGGS_TIER": TIER, "HIGGS_SNAPSHOT": "1" if SNAPSHOT_ENABLED else "0"},
     timeout=2 * 60 * MINUTES,
-    cpu=8,
-    memory=8 * 1024,
+    cpu=int(os.environ.get("HIGGS_CPU", "8")),
+    memory=int(os.environ.get("HIGGS_MEMORY", str(8 * 1024))),
     min_containers=0,
     max_containers=1,  # single-container throughput measurement
     # Required so @modal.enter(snap=True/False) methods are valid even when
