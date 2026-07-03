@@ -336,7 +336,7 @@ def benchmark(
     levels = [int(x) for x in concurrency_levels.split(",") if x.strip()]
     if url is None:
         # Provision an ephemeral server container on this tier.
-        url = HiggsTTS().serve.get_web_url()
+        url = HiggsTTS(tier=gpu_type).serve.get_web_url()
     print(f"[benchmark] tier={gpu_type} url={url} mode={mode} pattern={pattern} levels={levels}", flush=True)
     files = run_benchmark(url, gpu_type, mode, pattern, levels)
     return "\n".join(files)
