@@ -26,9 +26,7 @@ import argparse
 import concurrent.futures
 import io
 import json
-import os
 import statistics
-import subprocess
 import sys
 import time
 import urllib.error
@@ -38,7 +36,7 @@ from pathlib import Path
 
 # Importing higgs_modal is harmless for local analyze (no remote calls fire);
 # it gives us the modal app + HiggsTTS class + tier config for the entrypoint.
-from higgs_modal import TIER as ENV_TIER, GPU as ENV_GPU, APP_NAME  # noqa: F401
+from higgs_modal import TIER as ENV_TIER, GPU as ENV_GPU  # noqa: F401
 import modal  # noqa: E402,F401
 from higgs_modal import app, HiggsTTS  # noqa: E402
 
@@ -84,8 +82,12 @@ def _post_audio(url: str, body: dict, timeout: float = REQUEST_TIMEOUT_S) -> tup
     )
     t0 = time.time()
     with urllib.request.urlopen(req, timeout=timeout) as r:
+        ct = r.headers.get("Content-Type", "")
         body_bytes = r.read()
     dt = time.time() - t0
+    # Validate response is audio, not an HTML error page.
+    if "audio" not in ct and len(body_bytes) < 1000:
+        raise ValueError(f"Expected audio response, got Content-Type={ct}, body={body_bytes[:200]}")
     return dt, body_bytes
 
 
@@ -349,8 +351,6 @@ def run_snapshot_test(deployed_app_name: str, snapshot_tier: str = "L4") -> dict
     snapshot-phase startup. The cold sample is one request served from the
     deployed snapshot server; methodology documented in the verdict JSON.
     """
-    from higgs_modal import GPU_TIERS
-
     cls = modal.Cls.from_name(deployed_app_name, "HiggsTTS")
     status = cls().snapshot_endpoint_status.remote()
     url = cls().serve.get_web_url()
@@ -441,11 +441,28 @@ def _best_throughput(result: dict) -> dict | None:
 
 
 def summarize() -> dict:
-    """Aggregate results/*.json into summary.json + print a comparison table."""
+    """Aggregate results/*.json into summary.json + print a comparison table.
+
+    Both patterns run in the same container, so the voice-cloning cold_start is
+    actually a warm start. The true container cold start is the zero-shot
+    cold_start (first request). We use it as the container cold start for all
+    patterns in a tier.
+    """
     rows = _load_tier_results()
     summary: dict = {"tiers": {}, "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
 
-    # Deduplicate by tier, preferring the per-pattern cold files; capture both patterns.
+    # First pass: collect per-tier raw data and extract the true container cold
+    # start from the zero-shot pattern (which runs first and includes model
+    # loading). Voice cloning cold_start is a warm start, not a cold start.
+    tier_container_cold: dict[str, float | None] = {}
+    for r in rows:
+        tier = r.get("tier") or r.get("gpu_requested") or "?"
+        pat = r.get("pattern", "?")
+        if pat == "zero-shot":
+            cold = r.get("cold_start") or r.get("snapshot_cold_start") or {}
+            tier_container_cold[tier] = cold.get("cold_start_s")
+
+    # Second pass: compute cost metrics using the true container cold start.
     for r in rows:
         tier = r.get("tier") or r.get("gpu_requested") or "?"
         tier_block = summary["tiers"].setdefault(
@@ -455,20 +472,23 @@ def summarize() -> dict:
         cold = r.get("cold_start") or r.get("snapshot_cold_start") or {}
         w1 = _warm_n1(r)
         best = _best_throughput(r)
-        cold_s = cold.get("cold_start_s")
+        pattern_cold_s = cold.get("cold_start_s")  # per-pattern (warm for voice-cloning)
+        container_cold_s = tier_container_cold.get(tier)  # true container cold start
         processing_s = w1.get("mean_latency_s") if w1 else None
         audio_dur = (w1 or {}).get("mean_audio_duration_s")
         total_audio = sum((row.get("total_audio_s") or 0) for row in r.get("sweep", []))
         rate = GPU_PRICES_USD_HR.get(tier, 0.0)
-        # cost per request, cold-inclusive (single cold request of that pattern)
+        # Cost per request uses the true container cold start (zero-shot) for
+        # all patterns, not the per-pattern warm-start cold.
+        cold_for_cost = container_cold_s if container_cold_s is not None else pattern_cold_s
         cost_per_req_cold = (
-            round(((cold_s or 0) + (processing_s or 0)) * (rate / 3600), 4)
-            if cold_s is not None and processing_s is not None
+            round(((cold_for_cost or 0) + (processing_s or 0)) * (rate / 3600), 4)
+            if cold_for_cost is not None and processing_s is not None
             else None
         )
         cost_per_audio_cold = (
-            round(((cold_s or 0) + (processing_s or 0)) * (rate / 3600) / audio_dur, 4)
-            if cold_s is not None and processing_s is not None and audio_dur
+            round(((cold_for_cost or 0) + (processing_s or 0)) * (rate / 3600) / audio_dur, 4)
+            if cold_for_cost is not None and processing_s is not None and audio_dur
             else None
         )
         # warm steady-state per-request cost (no cold)
@@ -476,7 +496,9 @@ def summarize() -> dict:
             round((processing_s or 0) * (rate / 3600), 4) if processing_s is not None else None
         )
         tier_block["patterns"][pat] = {
-            "cold_start_s": cold_s,
+            "cold_start_s": pattern_cold_s,
+            "container_cold_start_s": container_cold_s,
+            "is_warm_start": pat == "voice-cloning" and container_cold_s is not None,
             "warm_n1_processing_s": processing_s,
             "warm_n1_audio_s": audio_dur,
             "warm_n1_rtf": (w1 or {}).get("rtf"),
@@ -489,7 +511,9 @@ def summarize() -> dict:
             "cost_per_req_warm_usd": cost_per_req_warm,
         }
 
-    # Pick sweet spot: lowest cost_per_audio_sec_cold_usd over all tier/pattern cold files.
+    # Pick sweet spot: lowest cost_per_audio_sec_cold_usd using true container
+    # cold starts. Voice cloning warm-start cold_s is excluded from the sweet
+    # spot calculation since it doesn't represent a real cold start.
     scored = []
     for tier, tb in summary["tiers"].items():
         for pat, pb in tb["patterns"].items():
@@ -505,7 +529,8 @@ def summarize() -> dict:
             "cost_per_audio_sec_cold_usd": c,
             "cost_per_req_cold_usd": pb.get("cost_per_req_cold_usd"),
             "reasoning": (
-                "lowest cost per audio second (cold-inclusive) across valid tier/pattern runs; "
+                "lowest cost per audio second (cold-inclusive, using true container "
+                "cold start from zero-shot first request) across valid tier/pattern runs; "
                 "primary metric for bursty scale-to-zero traffic."
             ),
         }
@@ -558,7 +583,11 @@ def _f(v, nd=None):
 
 
 def compute_breakeven() -> dict:
-    """Per-tier warm/cold break-even request rate, using plan formula and a rent model."""
+    """Per-tier warm/cold break-even request rate, using plan formula and a rent model.
+
+    Uses the true container cold start (zero-shot first request) for all
+    patterns, not the per-pattern warm-start cold.
+    """
     rows = _load_tier_results()
     summary_json = summarize()
     breakeven: dict = {"tiers": {}, "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
@@ -566,7 +595,8 @@ def compute_breakeven() -> dict:
     for tier, tb in summary_json["tiers"].items():
         rate = tb.get("price_usd_per_hr") or 0.0
         for pat, pb in tb["patterns"].items():
-            cold_s = pb.get("cold_start_s")
+            # Use the true container cold start (zero-shot) for all patterns.
+            cold_s = pb.get("container_cold_start_s") or pb.get("cold_start_s")
             proc_s = pb.get("warm_n1_processing_s")
             if cold_s is None or proc_s is None:
                 continue

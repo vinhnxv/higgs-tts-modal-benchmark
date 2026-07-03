@@ -4,12 +4,12 @@
       "voice-cloning": {
         "pattern": "voice-cloning",
         "price_usd_per_hr": 2.1,
-        "cold_start_s": 7.499,
+        "cold_start_s": 275.495,
         "warm_n1_processing_s": 2.633,
-        "cost_per_cold_request_usd": 0.0059,
+        "cost_per_cold_request_usd": 0.1622,
         "warm_idle_cost_per_hour_usd": 2.1,
-        "breakeven_req_per_min_plan": 5.92,
-        "breakeven_req_per_min_rent": 8.0,
+        "breakeven_req_per_min_plan": 0.22,
+        "breakeven_req_per_min_rent": 0.22,
         "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
       },
       "zero-shot": {
@@ -28,12 +28,12 @@
       "voice-cloning": {
         "pattern": "voice-cloning",
         "price_usd_per_hr": 1.1,
-        "cold_start_s": 6.906,
+        "cold_start_s": 237.332,
         "warm_n1_processing_s": 3.642,
-        "cost_per_cold_request_usd": 0.0032,
+        "cost_per_cold_request_usd": 0.0736,
         "warm_idle_cost_per_hour_usd": 1.1,
-        "breakeven_req_per_min_plan": 5.69,
-        "breakeven_req_per_min_rent": 8.69,
+        "breakeven_req_per_min_plan": 0.25,
+        "breakeven_req_per_min_rent": 0.25,
         "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
       },
       "zero-shot": {
@@ -52,12 +52,12 @@
       "voice-cloning": {
         "pattern": "voice-cloning",
         "price_usd_per_hr": 3.95,
-        "cold_start_s": 5.421,
+        "cold_start_s": 197.146,
         "warm_n1_processing_s": 2.154,
-        "cost_per_cold_request_usd": 0.0083,
+        "cost_per_cold_request_usd": 0.2187,
         "warm_idle_cost_per_hour_usd": 3.95,
-        "breakeven_req_per_min_plan": 7.92,
-        "breakeven_req_per_min_rent": 11.07,
+        "breakeven_req_per_min_plan": 0.3,
+        "breakeven_req_per_min_rent": 0.3,
         "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
       },
       "zero-shot": {
@@ -76,12 +76,12 @@
       "voice-cloning": {
         "pattern": "voice-cloning",
         "price_usd_per_hr": 1.95,
-        "cold_start_s": 6.906,
+        "cold_start_s": 274.387,
         "warm_n1_processing_s": 3.132,
-        "cost_per_cold_request_usd": 0.0054,
+        "cost_per_cold_request_usd": 0.1503,
         "warm_idle_cost_per_hour_usd": 1.95,
-        "breakeven_req_per_min_plan": 5.98,
-        "breakeven_req_per_min_rent": 8.69,
+        "breakeven_req_per_min_plan": 0.22,
+        "breakeven_req_per_min_rent": 0.22,
         "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
       },
       "zero-shot": {
@@ -100,12 +100,12 @@
       "voice-cloning": {
         "pattern": "voice-cloning",
         "price_usd_per_hr": 0.8,
-        "cold_start_s": 10.129,
+        "cold_start_s": 290.303,
         "warm_n1_processing_s": 4.912,
-        "cost_per_cold_request_usd": 0.0033,
+        "cost_per_cold_request_usd": 0.0656,
         "warm_idle_cost_per_hour_usd": 0.8,
-        "breakeven_req_per_min_plan": 3.99,
-        "breakeven_req_per_min_rent": 5.92,
+        "breakeven_req_per_min_plan": 0.2,
+        "breakeven_req_per_min_rent": 0.21,
         "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
       },
       "zero-shot": {
@@ -121,5 +121,15 @@
       }
     }
   },
-  "generated_at": "2026-07-03T05:10:11+00:00"
+  "generated_at": "2026-07-03T05:29:38+00:00",
+  "snapshot_verdict": {
+    "compatible": false,
+    "cold_start_baseline_s": 290.303,
+    "cold_start_snapshot_s": null,
+    "reduction_pct": null,
+    "failure_reason": "/release_memory_occupation endpoint returns 404 Not Found. SGLang-Omni's multi-stage pipeline (separate AR/codec/vocoder processes coordinated via IPC sockets) does not expose the snapshot memory release/resume endpoints that standard single-process SGLang servers provide.",
+    "tier": "L4",
+    "methodology": "Deployed with enable_memory_snapshot=True and experimental_options={enable_gpu_snapshot: True} on L4. Server started, health check passed, warmup request succeeded. POST /release_memory_occupation during snapshot-phase startup returned 404. Baseline cold start = L4 zero-shot cold start from U5 (290.3s).",
+    "container_log_evidence": "INFO: 127.0.0.1:54948 - \"POST /release_memory_occupation HTTP/1.1\" 404 Not Found"
+  }
 }

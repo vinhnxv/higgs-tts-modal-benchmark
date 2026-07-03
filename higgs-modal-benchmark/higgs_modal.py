@@ -308,8 +308,12 @@ class HiggsTTS:
         if self.process is not None:
             try:
                 self.process.terminate()
+                self.process.wait(timeout=10)
             except Exception:
-                pass
+                try:
+                    self.process.kill()
+                except Exception:
+                    pass
 
     @modal.method()
     def snapshot_endpoint_status(self) -> dict:
@@ -331,7 +335,7 @@ class HiggsTTS:
     memory=4 * 1024,
     timeout=60 * 60,
 )
-def download_model(seed: int = 0) -> str:
+def download_model() -> str:
     """Download the gated Higgs model into the shared HF cache Volume (one-time)."""
     import os
 
@@ -371,7 +375,7 @@ def check_shm() -> str:
     volumes={REF_PATH: REF_VOL},
     timeout=5 * MINUTES,
 )
-def upload_ref_audio(seed: int = 0) -> list[str]:
+def upload_ref_audio() -> list[str]:
     """U3: stage reference audio onto the read-only Volume the server mounts at /ref_audio."""
     import os
     import shutil

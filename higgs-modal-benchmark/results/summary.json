@@ -5,6 +5,8 @@
       "patterns": {
         "voice-cloning": {
           "cold_start_s": 7.499,
+          "container_cold_start_s": 275.495,
+          "is_warm_start": true,
           "warm_n1_processing_s": 2.633,
           "warm_n1_audio_s": 4.12,
           "warm_n1_rtf": 0.639,
@@ -12,12 +14,14 @@
           "best_throughput_concurrency": 16,
           "mean_latency_at_best_s": 3.655,
           "total_audio_s_sweep": 115.84,
-          "cost_per_req_cold_usd": 0.0059,
-          "cost_per_audio_sec_cold_usd": 0.0014,
+          "cost_per_req_cold_usd": 0.1622,
+          "cost_per_audio_sec_cold_usd": 0.0394,
           "cost_per_req_warm_usd": 0.0015
         },
         "zero-shot": {
           "cold_start_s": 275.495,
+          "container_cold_start_s": 275.495,
+          "is_warm_start": false,
           "warm_n1_processing_s": 2.147,
           "warm_n1_audio_s": 1.6,
           "warm_n1_rtf": 1.342,
@@ -36,6 +40,8 @@
       "patterns": {
         "voice-cloning": {
           "cold_start_s": 6.906,
+          "container_cold_start_s": 237.332,
+          "is_warm_start": true,
           "warm_n1_processing_s": 3.642,
           "warm_n1_audio_s": 3.8,
           "warm_n1_rtf": 0.958,
@@ -43,12 +49,14 @@
           "best_throughput_concurrency": 16,
           "mean_latency_at_best_s": 7.473,
           "total_audio_s_sweep": 114.8,
-          "cost_per_req_cold_usd": 0.0032,
-          "cost_per_audio_sec_cold_usd": 0.0008,
+          "cost_per_req_cold_usd": 0.0736,
+          "cost_per_audio_sec_cold_usd": 0.0194,
           "cost_per_req_warm_usd": 0.0011
         },
         "zero-shot": {
           "cold_start_s": 237.332,
+          "container_cold_start_s": 237.332,
+          "is_warm_start": false,
           "warm_n1_processing_s": 2.575,
           "warm_n1_audio_s": 1.72,
           "warm_n1_rtf": 1.497,
@@ -67,6 +75,8 @@
       "patterns": {
         "voice-cloning": {
           "cold_start_s": 5.421,
+          "container_cold_start_s": 197.146,
+          "is_warm_start": true,
           "warm_n1_processing_s": 2.154,
           "warm_n1_audio_s": 3.92,
           "warm_n1_rtf": 0.549,
@@ -74,12 +84,14 @@
           "best_throughput_concurrency": 16,
           "mean_latency_at_best_s": 2.632,
           "total_audio_s_sweep": 114.92,
-          "cost_per_req_cold_usd": 0.0083,
-          "cost_per_audio_sec_cold_usd": 0.0021,
+          "cost_per_req_cold_usd": 0.2187,
+          "cost_per_audio_sec_cold_usd": 0.0558,
           "cost_per_req_warm_usd": 0.0024
         },
         "zero-shot": {
           "cold_start_s": 197.146,
+          "container_cold_start_s": 197.146,
+          "is_warm_start": false,
           "warm_n1_processing_s": 1.776,
           "warm_n1_audio_s": 1.6,
           "warm_n1_rtf": 1.11,
@@ -98,6 +110,8 @@
       "patterns": {
         "voice-cloning": {
           "cold_start_s": 6.906,
+          "container_cold_start_s": 274.387,
+          "is_warm_start": true,
           "warm_n1_processing_s": 3.132,
           "warm_n1_audio_s": 4.0,
           "warm_n1_rtf": 0.783,
@@ -105,12 +119,14 @@
           "best_throughput_concurrency": 16,
           "mean_latency_at_best_s": 4.084,
           "total_audio_s_sweep": 115.24,
-          "cost_per_req_cold_usd": 0.0054,
-          "cost_per_audio_sec_cold_usd": 0.0014,
+          "cost_per_req_cold_usd": 0.1503,
+          "cost_per_audio_sec_cold_usd": 0.0376,
           "cost_per_req_warm_usd": 0.0017
         },
         "zero-shot": {
           "cold_start_s": 274.387,
+          "container_cold_start_s": 274.387,
+          "is_warm_start": false,
           "warm_n1_processing_s": 2.13,
           "warm_n1_audio_s": 1.68,
           "warm_n1_rtf": 1.268,
@@ -129,6 +145,8 @@
       "patterns": {
         "voice-cloning": {
           "cold_start_s": 10.129,
+          "container_cold_start_s": 290.303,
+          "is_warm_start": true,
           "warm_n1_processing_s": 4.912,
           "warm_n1_audio_s": 3.84,
           "warm_n1_rtf": 1.279,
@@ -136,12 +154,14 @@
           "best_throughput_concurrency": 16,
           "mean_latency_at_best_s": 10.794,
           "total_audio_s_sweep": 115.04,
-          "cost_per_req_cold_usd": 0.0033,
-          "cost_per_audio_sec_cold_usd": 0.0009,
+          "cost_per_req_cold_usd": 0.0656,
+          "cost_per_audio_sec_cold_usd": 0.0171,
           "cost_per_req_warm_usd": 0.0011
         },
         "zero-shot": {
           "cold_start_s": 290.303,
+          "container_cold_start_s": 290.303,
+          "is_warm_start": false,
           "warm_n1_processing_s": 3.269,
           "warm_n1_audio_s": 1.92,
           "warm_n1_rtf": 1.703,
@@ -156,12 +176,12 @@
       }
     }
   },
-  "generated_at": "2026-07-03T05:10:11+00:00",
+  "generated_at": "2026-07-03T05:29:38+00:00",
   "sweet_spot": {
-    "tier": "A10",
+    "tier": "L4",
     "pattern": "voice-cloning",
-    "cost_per_audio_sec_cold_usd": 0.0008,
-    "cost_per_req_cold_usd": 0.0032,
-    "reasoning": "lowest cost per audio second (cold-inclusive) across valid tier/pattern runs; primary metric for bursty scale-to-zero traffic."
+    "cost_per_audio_sec_cold_usd": 0.0171,
+    "cost_per_req_cold_usd": 0.0656,
+    "reasoning": "lowest cost per audio second (cold-inclusive, using true container cold start from zero-shot first request) across valid tier/pattern runs; primary metric for bursty scale-to-zero traffic."
   }
 }

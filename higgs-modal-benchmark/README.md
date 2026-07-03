@@ -148,32 +148,33 @@ All 5 GPU tiers benchmarked with zero-shot and voice cloning patterns.
 | Tier | $/hr | Pattern | Cold Start (s) | Throughput @ N=16 (req/s) | $/req (cold) | $/audio-sec (cold) |
 |------|------|---------|----------------|---------------------------|--------------|---------------------|
 | L4 | $0.80 | zero-shot | 290.3 | 1.78 | $0.065 | $0.034 |
-| L4 | $0.80 | voice-clone | 10.1 (warm) | 0.97 | $0.003 | $0.001 |
+| L4 | $0.80 | voice-clone | 290.3* | 0.97 | $0.066 | $0.017 |
 | A10 | $1.10 | zero-shot | 237.3 | 2.74 | $0.073 | $0.043 |
-| A10 | $1.10 | voice-clone | 6.9 (warm) | 1.49 | $0.003 | $0.001 |
+| A10 | $1.10 | voice-clone | 237.3* | 1.49 | $0.074 | $0.019 |
 | L40S | $1.95 | zero-shot | 274.4 | 4.66 | $0.150 | $0.089 |
-| L40S | $1.95 | voice-clone | 6.9 (warm) | 3.19 | $0.005 | $0.001 |
+| L40S | $1.95 | voice-clone | 274.4* | 3.19 | $0.150 | $0.038 |
 | A100-40 | $2.10 | zero-shot | 275.5 | 5.03 | $0.162 | $0.101 |
-| A100-40 | $2.10 | voice-clone | 7.5 (warm) | 3.41 | $0.006 | $0.001 |
+| A100-40 | $2.10 | voice-clone | 275.5* | 3.41 | $0.162 | $0.039 |
 | H100 | $3.95 | zero-shot | 197.1 | 6.44 | $0.218 | $0.136 |
-| H100 | $3.95 | voice-clone | 5.4 (warm) | 5.42 | $0.008 | $0.002 |
+| H100 | $3.95 | voice-clone | 197.1* | 5.42 | $0.219 | $0.056 |
 
-**Note:** Voice cloning "cold start" values are warm starts — both patterns run
-in the same container, so the second pattern benefits from the warm cache. The
-true cold start is the zero-shot cold start (container init + model loading).
+*Voice cloning uses the true container cold start (measured by zero-shot first
+request) for cost calculations. The per-pattern cold start was a warm start
+(~7s) since both patterns run in the same container.
 
 ### Recommendation
 
 For **bursty, scale-to-zero traffic** (each request triggers a cold start):
 
-- **L4 is the most cost-effective** at $0.034/audio-second (cold-inclusive).
-  The cold start time (~290s) is similar across all tiers (197-290s), so the
-  cheapest GPU wins on cost per request.
-- **A10 is a close second** at $0.043/audio-second, with 55% higher throughput
-  (2.74 vs 1.78 req/s). If cold starts are amortized across multiple requests,
-  A10 becomes competitive.
+- **L4 is the most cost-effective** at $0.017/audio-second for voice cloning
+  (cold-inclusive, using the true container cold start of 290s). The cold start
+  time is similar across all tiers (197-290s), so the cheapest GPU wins on cost
+  per request.
+- **A10 is a close second** at $0.019/audio-second for voice cloning, with 55%
+  higher throughput (2.74 vs 1.78 req/s). If cold starts are amortized across
+  multiple requests, A10 becomes competitive.
 - **H100 has the shortest cold start** (197s) and highest throughput (6.44
-  req/s), but at $0.136/audio-second it's 4x more expensive than L4.
+  req/s), but at $0.056/audio-second it's 3.3x more expensive than L4.
 
 For **steady-state traffic** (warm container, `min_containers=1`):
 
@@ -182,19 +183,20 @@ For **steady-state traffic** (warm container, `min_containers=1`):
 
 ### Break-Even Analysis
 
-For true cold starts (zero-shot), all tiers need < 1 req/min to justify
+For true cold starts, all tiers need < 1 req/min to justify
 scale-to-zero — meaning if you get less than 1 request per minute, cold starts
 are cheaper than keeping a warm container.
 
-For warm voice cloning, the break-even is 4-11 req/min depending on tier:
+For warm voice cloning (steady-state), the break-even is also < 1 req/min
+since the container cold start dominates:
 
-| Tier | Break-even (warm, req/min) |
-|------|---------------------------|
-| L4 | 5.9 |
-| A10 | 8.7 |
-| L40S | 8.7 |
-| A100-40 | 8.0 |
-| H100 | 11.1 |
+| Tier | Break-even (req/min) |
+|------|----------------------|
+| L4 | 0.20 |
+| A10 | 0.25 |
+| L40S | 0.22 |
+| A100-40 | 0.22 |
+| H100 | 0.30 |
 
 ### Snapshot Compatibility
 
