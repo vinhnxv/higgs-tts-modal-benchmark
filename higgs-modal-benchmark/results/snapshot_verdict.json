@@ -1,0 +1,10 @@
+{
+  "compatible": false,
+  "cold_start_baseline_s": 290.303,
+  "cold_start_snapshot_s": null,
+  "reduction_pct": null,
+  "failure_reason": "/release_memory_occupation endpoint returns 404 Not Found. SGLang-Omni's multi-stage pipeline (separate AR/codec/vocoder processes coordinated via IPC sockets) does not expose the snapshot memory release/resume endpoints that standard single-process SGLang servers provide.",
+  "tier": "L4",
+  "methodology": "Deployed with enable_memory_snapshot=True and experimental_options={enable_gpu_snapshot: True} on L4. Server started, health check passed, warmup request succeeded. POST /release_memory_occupation during snapshot-phase startup returned 404. Baseline cold start = L4 zero-shot cold start from U5 (290.3s).",
+  "container_log_evidence": "INFO: 127.0.0.1:54948 - \"POST /release_memory_occupation HTTP/1.1\" 404 Not Found"
+}
