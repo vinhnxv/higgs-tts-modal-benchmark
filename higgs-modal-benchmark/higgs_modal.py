@@ -204,6 +204,9 @@ _cls_kwargs: dict = dict(
     gpu=GPU,
     volumes={HF_CACHE_PATH: HF_CACHE_VOL, REF_PATH: REF_VOL},
     secrets=[HF_SECRET],
+    # Propagate tier to the container so module-level TIER reads correctly
+    # (HIGGS_TIER is set locally but not in the container by default).
+    env={"HIGGS_TIER": TIER, "HIGGS_SNAPSHOT": "1" if SNAPSHOT_ENABLED else "0"},
     timeout=2 * 60 * MINUTES,
     cpu=8,
     memory=8 * 1024,
