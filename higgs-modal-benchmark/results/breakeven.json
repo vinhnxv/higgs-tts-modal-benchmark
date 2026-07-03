@@ -1,0 +1,125 @@
+{
+  "tiers": {
+    "A100_40": {
+      "voice-cloning": {
+        "pattern": "voice-cloning",
+        "price_usd_per_hr": 2.1,
+        "cold_start_s": 7.499,
+        "warm_n1_processing_s": 2.633,
+        "cost_per_cold_request_usd": 0.0059,
+        "warm_idle_cost_per_hour_usd": 2.1,
+        "breakeven_req_per_min_plan": 5.92,
+        "breakeven_req_per_min_rent": 8.0,
+        "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
+      },
+      "zero-shot": {
+        "pattern": "zero-shot",
+        "price_usd_per_hr": 2.1,
+        "cold_start_s": 275.495,
+        "warm_n1_processing_s": 2.147,
+        "cost_per_cold_request_usd": 0.162,
+        "warm_idle_cost_per_hour_usd": 2.1,
+        "breakeven_req_per_min_plan": 0.22,
+        "breakeven_req_per_min_rent": 0.22,
+        "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
+      }
+    },
+    "A10": {
+      "voice-cloning": {
+        "pattern": "voice-cloning",
+        "price_usd_per_hr": 1.1,
+        "cold_start_s": 6.906,
+        "warm_n1_processing_s": 3.642,
+        "cost_per_cold_request_usd": 0.0032,
+        "warm_idle_cost_per_hour_usd": 1.1,
+        "breakeven_req_per_min_plan": 5.69,
+        "breakeven_req_per_min_rent": 8.69,
+        "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
+      },
+      "zero-shot": {
+        "pattern": "zero-shot",
+        "price_usd_per_hr": 1.1,
+        "cold_start_s": 237.332,
+        "warm_n1_processing_s": 2.575,
+        "cost_per_cold_request_usd": 0.0733,
+        "warm_idle_cost_per_hour_usd": 1.1,
+        "breakeven_req_per_min_plan": 0.25,
+        "breakeven_req_per_min_rent": 0.25,
+        "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
+      }
+    },
+    "H100": {
+      "voice-cloning": {
+        "pattern": "voice-cloning",
+        "price_usd_per_hr": 3.95,
+        "cold_start_s": 5.421,
+        "warm_n1_processing_s": 2.154,
+        "cost_per_cold_request_usd": 0.0083,
+        "warm_idle_cost_per_hour_usd": 3.95,
+        "breakeven_req_per_min_plan": 7.92,
+        "breakeven_req_per_min_rent": 11.07,
+        "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
+      },
+      "zero-shot": {
+        "pattern": "zero-shot",
+        "price_usd_per_hr": 3.95,
+        "cold_start_s": 197.146,
+        "warm_n1_processing_s": 1.776,
+        "cost_per_cold_request_usd": 0.2183,
+        "warm_idle_cost_per_hour_usd": 3.95,
+        "breakeven_req_per_min_plan": 0.3,
+        "breakeven_req_per_min_rent": 0.3,
+        "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
+      }
+    },
+    "L40S": {
+      "voice-cloning": {
+        "pattern": "voice-cloning",
+        "price_usd_per_hr": 1.95,
+        "cold_start_s": 6.906,
+        "warm_n1_processing_s": 3.132,
+        "cost_per_cold_request_usd": 0.0054,
+        "warm_idle_cost_per_hour_usd": 1.95,
+        "breakeven_req_per_min_plan": 5.98,
+        "breakeven_req_per_min_rent": 8.69,
+        "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
+      },
+      "zero-shot": {
+        "pattern": "zero-shot",
+        "price_usd_per_hr": 1.95,
+        "cold_start_s": 274.387,
+        "warm_n1_processing_s": 2.13,
+        "cost_per_cold_request_usd": 0.1498,
+        "warm_idle_cost_per_hour_usd": 1.95,
+        "breakeven_req_per_min_plan": 0.22,
+        "breakeven_req_per_min_rent": 0.22,
+        "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
+      }
+    },
+    "L4": {
+      "voice-cloning": {
+        "pattern": "voice-cloning",
+        "price_usd_per_hr": 0.8,
+        "cold_start_s": 10.129,
+        "warm_n1_processing_s": 4.912,
+        "cost_per_cold_request_usd": 0.0033,
+        "warm_idle_cost_per_hour_usd": 0.8,
+        "breakeven_req_per_min_plan": 3.99,
+        "breakeven_req_per_min_rent": 5.92,
+        "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
+      },
+      "zero-shot": {
+        "pattern": "zero-shot",
+        "price_usd_per_hr": 0.8,
+        "cold_start_s": 290.303,
+        "warm_n1_processing_s": 3.269,
+        "cost_per_cold_request_usd": 0.0652,
+        "warm_idle_cost_per_hour_usd": 0.8,
+        "breakeven_req_per_min_plan": 0.2,
+        "breakeven_req_per_min_rent": 0.21,
+        "note": "Above this request rate, keeping a warm container (min_containers=1) is cheaper; below it, scale-to-zero (cold) is cheaper. rent model = 60/cold_start; plan model = 60/(cold+processing)."
+      }
+    }
+  },
+  "generated_at": "2026-07-03T05:10:11+00:00"
+}
