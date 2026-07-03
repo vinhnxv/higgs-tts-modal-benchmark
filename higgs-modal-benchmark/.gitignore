@@ -1,0 +1,12 @@
+# secrets
+.modal.toml
+.env
+# python
+__pycache__/
+*.pyc
+.venv/
+# generated audio outputs (keep results JSON)
+results/*.wav
+results/*.mp3
+results/*.pcm
+*:Zone.Identifier
