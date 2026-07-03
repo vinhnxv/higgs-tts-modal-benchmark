@@ -56,7 +56,7 @@ MAX_INPUTS = 16
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Volumes + secret ----------------------------------------------------------
-HF_CACHE_PATH = "/root/.cache/huggingface"
+HF_CACHE_PATH = "/data/hf_cache"
 REF_PATH = "/ref_audio"
 HF_CACHE_VOL = modal.Volume.from_name("higgs-hf-cache", create_if_missing=True)
 REF_VOL = modal.Volume.from_name("higgs-ref-audio", create_if_missing=True)
@@ -86,7 +86,9 @@ _image = (
             "TORCHINDUCTOR_COMPILE_THREADS": "1",  # snapshot friendliness (Modal example)
         }
     )
-    .pip_install("huggingface-hub==0.36.0", "hf-transfer==0.1.9")
+    .run_commands(
+        ". /app/sglang-omni/.venv/bin/activate && uv pip install huggingface-hub==0.36.0 hf-transfer==0.1.9",
+    )
     .add_local_dir(os.path.join(ROOT, "reference_audio"), "/ref_audio_source")
 )
 
